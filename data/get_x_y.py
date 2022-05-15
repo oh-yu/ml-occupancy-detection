@@ -160,7 +160,8 @@ def get_am_pm(times):
     return am_pm
 
 
-def create_features(energy):
+def create_features(energy, col):
+    # basic statistics
     means = []
     maxs = []
     mins = []
@@ -172,4 +173,36 @@ def create_features(energy):
         mins.append(np.min(energy[t:t+2]))
         stds.append(np.std(energy[t:t+2]))
         ranges.append(abs(energy[t+1] - energy[t]))
-    return means, maxs, mins, stds, ranges
+
+    # temperature features
+    temp5 = pd.read_csv('./ecodataset/Temperature/temp5.csv', header=None)
+    temp6 = pd.read_csv('./ecodataset/Temperature/temp6.csv', header=None)
+    temp7 = pd.read_csv('./ecodataset/Temperature/temp7.csv', header=None)
+    temp8 = pd.read_csv('./ecodataset/Temperature/temp8.csv', header=None)
+    temp9 = pd.read_csv('./ecodataset/Temperature/temp9.csv', header=None)
+    temp10 = pd.read_csv('./ecodataset/Temperature/temp10.csv', header=None)
+    temp11 = pd.read_csv('./ecodataset/Temperature/temp11.csv', header=None)
+    temp12 = pd.read_csv('./ecodataset/Temperature/temp12.csv', header=None)
+    temp1 = pd.read_csv('./ecodataset/Temperature/temp1.csv', header=None)
+    temp2 = pd.read_csv('./ecodataset/Temperature/temp2.csv', header=None)
+    dic={}
+    dic[5]=temp5
+    dic[6]=temp6
+    dic[7]=temp7
+    dic[8]=temp8
+    dic[9]=temp9
+    dic[10]=temp10
+    dic[11]=temp11
+    dic[12]=temp12
+    dic[1]=temp1
+    dic[2]=temp2
+    list_1=[]
+    for i in col.values.reshape(col.values.shape[0], ):
+        target = dic[int(i.rsplit('-', 2)[1])]
+        for val in target[int(i.rsplit('-', 2)[2])-1].values:
+            list_1.append(val)
+    temp_list=[]
+    for i in range(0,len(energy),2):
+        temp_list.append(np.mean(list_1[i:i+2]))
+
+    return means, maxs, mins, stds, ranges, temp_list
