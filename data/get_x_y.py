@@ -180,7 +180,7 @@ def create_features(energy, target_date):
     # temperature features
     temps = {}
     for month in [5, 6, 7, 8, 9, 10, 11, 12, 1, 2]:
-        temps[month] = pd.read_csv(f'./ecodataset/Temperature/temp{month}.csv', header=None)
+        temps[month] = pd.read_csv(f'./ecodataset/Temperature/temp{month}.csv')
 
     temps_30m = []
     for date in target_date.values.reshape(-1):
@@ -188,7 +188,7 @@ def create_features(energy, target_date):
         month, day = int(month), int(day)-1
         target_month_temps = temps[month]
 
-        for val in target_month_temps[day].values:
+        for val in target_month_temps[str(day)].values:
             temps_30m.append(val)
 
     temps_60m = []
